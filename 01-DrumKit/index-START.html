@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <div class="keys">
+    <div data-key="65" class="key"> 
+      <!-- data-key : it's data- attributes, since each div's class is 'key', we hook up 2 data-key element whose daya-key's value is the same-->
+      <!-- aka we hoop each div with it's audio div -->
+      <!-- 65: keycode number associated with A key on the keyboard -->
+      <!-- check website: keycode.info for more keycode number info -->
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+<script>
+ 
+// Step 1: construct callback function for audioPlay
+  function audioPlay(event) {
+    const sound = document.querySelector(`audio[data-key="${event.keyCode}"]`) // Q: can we use event.target here? No, coz it represent the attribute of audio
+    // attribute selector []
+    // because the value of data-key will be dynamic, this we wanna use string interpolation instead of double quote
+    //event.keyCode: refer to the keyCode when we hit certain key on our keyboard(the event). it's the dynamically changing value.
+    // remember to double quote value of attribute as it's the format of css attribute selector
+    if (!sound) return; // it stops the call function if no audio element exist;
+    sound.currentTime = 0; //rewing to the start of audio;
+    // .currentTime is a property on audio tag through DOM, it sets or returns the current playback position in the audio/video (in seconds);
+    sound.play();
+    // .play() is a function/method on html5 DOM allows us to manipulate audio tag using JS.
+    // DON'T forget the parenthenese for function.
+  }
+
+//Step 2: construct callback function for keyboard VisualEffect
+ function visualEffect(event){
+  const visualEffect = document.querySelector(`.key[data-key="${event.keyCode}"]`)
+    // save visual element in a variable. .key => the class
+    console.log(visualEffect);
+    visualEffect.classList.add("playing");
+    // add styling class: .playing to element visualEffect when keydown event happens
+    // .playing class is pre-defined in CSS to manipulate the change we want for the element visually
+ }
+
+//Step 3: create event Listener to remove the visual effect when the transition finished. i.e. remove .playing class
+  //Step 3.1: construct callback to remove visual effect
+  const allKeys = document.querySelectorAll(".key");
+  // if we wanna an eventListener apply to multiple elements, 
+  // we need do a loop that loop through all the elements,
+  // we  CANNOT just add the eventListener to the variable that select multiple elements.
+  // variable needs to be in global scope as it needs to loop through each element in the variable.
+  function removeVisualEffect (event) {
+     if (event.propertyName !== "transform") return // skip it if it's not a transform property.
+     this.classList.remove("playing");
+
+  }
+  //Step 3.2: create event listener to remove visual effect
+  allKeys.forEach(key => key.addEventListener("transitionend",removeVisualEffect))
+  // event => 'transitionend';
+
+
+// Step 4: create event listener for both audioplay & visualEffect & removeVisualEffect
+   // Note: window used instead of document is because it's detecting event on the keyboard, not limited to the website page;
+  window.addEventListener("keydown", audioPlay);
+  window.addEventListener("keydown", visualEffect);
+   // what we wanna do when event is detected, event => "keydown";
+</script>
+
+
+</body>
+</html>
