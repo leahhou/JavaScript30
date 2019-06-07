@@ -97,8 +97,8 @@
   // variable needs to be in global scope as it needs to loop through each element in the variable.
   function removeVisualEffect (event) {
      if (event.propertyName !== "transform") return // skip it if it's not a transform property.
-     this.classList.remove("playing");
-
+     // we only interested in the transform property as we wanna the .playing class removed when transition finishes.
+     event.target.classList.remove("playing");
   }
   //Step 3.2: create event listener to remove visual effect
   allKeys.forEach(key => key.addEventListener("transitionend",removeVisualEffect))
@@ -107,8 +107,12 @@
 
 // Step 4: create event listener for both audioplay & visualEffect & removeVisualEffect
    // Note: window used instead of document is because it's detecting event on the keyboard, not limited to the website page;
-  window.addEventListener("keydown", audioPlay);
-  window.addEventListener("keydown", visualEffect);
+  function audioVisual (event) {
+    audioPlay(event);
+    visualEffect(event);
+  }
+  window.addEventListener("keydown", audioVisual);
+  // window.addEventListener("keydown", visualEffect);
    // what we wanna do when event is detected, event => "keydown";
 </script>
 
