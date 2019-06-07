@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+  <title>JS + CSS Clock</title>
+</head>
+
+<body>
+  <div class="clock">
+    <div class="clock-face">
+      <div class="hand hour-hand"></div>
+      <div class="hand min-hand"></div>
+      <div class="hand second-hand"></div>
+    </div>
+  </div>
+
+  <script>
+  //Step 1: create 3 variables that grabs hour,minus & second divs
+    const hourHand = document.querySelector(".hour-hand");
+    const minHand = document.querySelector(".min-hand");
+    const secHand = document.querySelector(".second-hand");
+
+  //Step 2: create function that convert time into motion transition in degree(over 360)
+  function clockTurn() {
+    //step 2.1 create a variable to grab current time
+    const now = new Date(); // create a new object from Date() constructor;
+    //step 2.2 grab the current second, minuts & hours of current time & assign them to variables
+    const second = now.getSeconds();
+    const minute = now.getMinutes();
+    const hour = now.getHours();
+    //step 2.3 convert number in sec, minute & hour into rotate in degrees & save into new variables;
+    const secDegree = ((second / 60) * 360) + 90; // + 90 is because we rotate the hand 90 degree clockwise to point at 12 to start with.
+    const minDegree = ((minute / 60) * 360) + ((second /60)*(360/60))+ 90;
+       // for each minut, minDegree = time of min turn + at that minute how many secs has passed;
+    const hourDegree = ((hour / 12) * 360)+ ((minute / 60) * (360/12)) + 90;
+    //step 2.4 set value of transform property on hour, minus & second's Hand(div)
+    secHand.style.transform = `rotate(${secDegree}deg)`;
+    minHand.style.transform = `rotate(${minDegree}deg)`;
+    hourHand.style.transform = `rotate(${hourDegree}deg)`;
+  }
+  //Step 3: use setInterval to let the clock turn every sec 
+  setInterval(clockTurn,1000); 
+  </script>
+</body>
+</html>
