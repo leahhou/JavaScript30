@@ -27,9 +27,12 @@
     function handleUpdate() {
       const suffix = this.dataset.sizing || '';
       document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+      //Note: all this can be replaced by event.target to achieve same result
     }
 
     inputs.forEach(input => input.addEventListener('change', handleUpdate));
+    //.forEach take a callback as argument
+    // when add eventListeners to Multiple elements, we MUST do a loop to detect events for all elements.
     inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
   </script>
 
