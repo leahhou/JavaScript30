@@ -14,16 +14,54 @@
 
     <label for="blur">Blur:</label>
     <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+     <!-- tag input's property value is only have the number, without specify the unit of the value -->
 
     <label for="base">Base Color</label>
     <input id="base" type="color" name="base" value="#ffc600">
   </div>
 
-  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+  <img src="img2.jpg">
 
 
   <script>
+  //Section A: create css variables in CSS stylesheet
+    //step 0: create css variables & assign variables to relevant css properties  (See stylesheet)
+
+  //Section B: manipulate css variable values directly using JS directly on DOM.
+    //step 1: create variable to grab relevant element
+    const inputs = document.querySelectorAll(".controls input") // selected all input tag inside .controls class
+    //step 2: create callback function to use in the eventListener (what we wanna manipulate)
+    function updateImg() {
+      const append = this.dataset.sizing || "" ;
+      // since only spacing & blur have unit of 'px', when change the base we don't have the unit, 
+      // thus we use a OR operator to select the unit 
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + append);
+      //document.documentElement: select all elements in the DOM 
+      //.style.setProperty(): go to style and setProperty on style
+      //(arg1, arg2)
+        //arg1: specify which element we manipulate
+          // use string interpolation to select element by css variable
+        //arg2: specify the value of that element  
+
+    };
+    //step3: create eventListener
+     inputs.forEach(input => input.addEventListener("change", updateImg));
+      // "change" event is for when the input is changed 
+      //.forEach take a callback as argument
+      // when add eventListeners to Multiple elements, we MUST do a loop to detect events for all elements.
+     inputs.forEach( input => input.addEventListener("mousemove", updateImg));
   </script>
 
 </body>
 </html>
+
+<!-- Extra knowledge -->
+  <!-- 1. Value -->
+    <!-- in HTML, value property of certain tag only contains the NUMBER, not the unit of the value -->
+    <!-- therefore when we manipulate change the value of a tag in JS, we need to specify the unit of the value -->
+  <!-- 2. Data - attribute -->
+    <!-- To specify the unit of the value, we add the unit in data - attribute -->
+    <!-- in this case, we name it as data-sizing & attach "px" as the unit -->
+  <!-- 3. dataset -->
+    <!-- dataset stores all Data attributes -->
+    <!-- therefore, when we wanna select a certain data-attribute, we select from dataset -->
